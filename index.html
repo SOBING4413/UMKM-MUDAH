@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UMKM Mudah</title>
+    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="./features.css">
+    <!-- PWA -->
+    <link rel="manifest" href="./manifest.json">
+    <meta name="theme-color" content="#16A34A">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="UMKM Mudah">
+    <link rel="apple-touch-icon" href="./icon-192.png">
+    <!-- Excel -->
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+    <!-- ==================== LOADING SCREEN ==================== -->
+    <div id="loadingScreen" class="loading-screen">
+        <div class="loading-content">
+            <div class="loading-logo-wrap">
+                <div class="loading-logo-circle">
+                    <span class="loading-logo-icon">🌿</span>
+                </div>
+                <div class="loading-pulse-ring"></div>
+                <div class="loading-pulse-ring ring-2"></div>
+            </div>
+            <h1 class="loading-title">UMKM Mudah</h1>
+            <p class="loading-tagline">Tools Gratis untuk Pemula Jualan</p>
+            <div class="loading-bar-wrap">
+                <div class="loading-bar" id="loadingBar"></div>
+            </div>
+            <p class="loading-status" id="loadingStatus">Memuat aplikasi...</p>
+        </div>
+    </div>
+
+    <!-- ==================== MAIN APP ==================== -->
+    <div id="mainApp" style="display:none;">
+
+        <!-- Auth Section (Top Bar) -->
+        <div id="authSection" class="top-auth-bar">
+            <span id="userDisplayName" class="top-auth-name"></span>
+            <button id="btnLogin" class="btn btn-primary btn-sm" style="display:none;" onclick="window.location.href='./login.html'">🔑 Login</button>
+            <button type="button" id="btnLogout" class="btn btn-danger btn-sm" style="display:none;" onclick="handleLogoutClick(); return false;">🚪 Logout</button>
+        </div>
+
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <span class="logo-icon">🌿</span>
+                    <span class="logo-text">UMKM Mudah</span>
+                </div>
+                <p class="logo-tagline">Tools Gratis untuk Pemula</p>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item active" data-page="home">
+                    <span class="nav-icon">🏡</span>
+                    <span class="nav-label">Beranda</span>
+                </li>
+                <li class="nav-item" data-page="dashboard">
+                    <span class="nav-icon">📊</span>
+                    <span class="nav-label">Dashboard</span>
+                </li>
+                <li class="nav-item" data-page="calculator">
+                    <span class="nav-icon">🧮</span>
+                    <span class="nav-label">Kalkulator Bisnis</span>
+                </li>
+                <li class="nav-item" data-page="finance">
+                    <span class="nav-icon">💰</span>
+                    <span class="nav-label">Catat Keuangan</span>
+                </li>
+                <li class="nav-item" data-page="invoice">
+                    <span class="nav-icon">🧾</span>
+                    <span class="nav-label">Buat Nota</span>
+                </li>
+                <li class="nav-item" data-page="stock">
+                    <span class="nav-icon">📦</span>
+                    <span class="nav-label">Stok Barang</span>
+                </li>
+                <li class="nav-item" data-page="docs">
+                    <span class="nav-icon">📖</span>
+                    <span class="nav-label">Panduan</span>
+                </li>
+                <li class="nav-item" data-page="support">
+                    <span class="nav-icon">💬</span>
+                    <span class="nav-label">Bantuan</span>
+                </li>
+                <li class="nav-item" data-page="credits">
+                    <span class="nav-icon">👨‍💻</span>
+                    <span class="nav-label">Credits</span>
+                </li>
+            </ul>
+            <div class="sidebar-footer">
+                <!-- Dark Mode Toggle -->
+                <div class="dark-mode-toggle" id="darkModeToggle" title="Ganti mode terang/gelap">
+                    <span class="dark-mode-icon" id="darkModeIcon">🌙</span>
+                    <span class="dark-mode-label" id="darkModeLabel">Mode Gelap</span>
+                </div>
+                <p>💡 Dibuat untuk pemula jualan</p>
+                <p class="footer-copy">© 2026 UMKM Mudah</p>
+            </div>
+        </nav>
+
+        <!-- Mobile Bottom Nav -->
+        <nav class="mobile-nav" id="mobileNav">
+            <div class="mobile-nav-item active" data-page="home">
+                <span>🏡</span>
+                <small>Beranda</small>
+            </div>
+            <div class="mobile-nav-item" data-page="dashboard">
+                <span>📊</span>
+                <small>Dashboard</small>
+            </div>
+            <div class="mobile-nav-item" data-page="calculator">
+                <span>🧮</span>
+                <small>Hitung</small>
+            </div>
+            <div class="mobile-nav-item" data-page="finance">
+                <span>💰</span>
+                <small>Keuangan</small>
+            </div>
+            <div class="mobile-nav-item" data-page="invoice">
+                <span>🧾</span>
+                <small>Nota</small>
+            </div>
+            <div class="mobile-nav-item" data-page="stock">
+                <span>📦</span>
+                <small>Stok</small>
+            </div>
+            <div class="mobile-nav-item" data-page="docs">
+                <span>📖</span>
+                <small>Panduan</small>
+            </div>
+            <div class="mobile-nav-item" data-page="support">
+                <span>💬</span>
+                <small>Bantuan</small>
+            </div>
+            <div class="mobile-nav-item" data-page="credits">
+                <span>👨‍💻</span>
+                <small>Credits</small>
+            </div>
+            <!-- Mobile Dark Mode Toggle -->
+            <div class="mobile-nav-item mobile-dark-toggle" id="mobileDarkModeToggle">
+                <span id="mobileDarkModeIcon">🌙</span>
+                <small id="mobileDarkModeLabel">Gelap</small>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content" id="mainContent">
+
+            <!-- ==================== HOME PAGE ==================== -->
+            <section class="page active" id="page-home">
+                <div class="home-hero">
+                    <div class="home-hero-content">
+                        <div class="hero-badge">🎉 100% Gratis & Mudah Dipakai</div>
+                        <h1 class="home-title">Baru Mulai Jualan?<br>Tenang, Kami Bantu!</h1>
+                        <p class="home-desc">
+                            <strong>UMKM Mudah</strong> adalah tools gratis yang dirancang khusus untuk kamu yang 
+                            <strong>baru pertama kali berjualan</strong>. Tidak perlu install apapun, tidak perlu 
+                            paham komputer — cukup buka di HP atau laptop, langsung pakai!
+                        </p>
+                        <div class="home-cta">
+                            <button class="btn btn-primary btn-lg" data-page="dashboard">🚀 Mulai Sekarang</button>
+                            <button class="btn btn-outline-white btn-lg" data-page="docs">📖 Baca Panduan Dulu</button>
+                        </div>
+                    </div>
+                    <div class="home-hero-img">
+                        <img src="https://mgx-backend-cdn.metadl.com/generate/images/1114886/2026-04-13/842b48c1-0ba1-4ba6-9e62-2acb37ad4ba9.png" alt="UMKM Mudah">
+                    </div>
+                </div>
+
+                <div class="home-section">
+                    <h2 class="home-section-title">🤔 Kenapa Harus Pakai UMKM Mudah?</h2>
+                    <p class="home-section-desc">Karena kami tahu rasanya baru mulai jualan — bingung hitung untung, lupa catat pengeluaran, dan nota masih tulis tangan. Tools ini dibuat supaya kamu bisa fokus jualan!</p>
+                    <div class="benefit-grid">
+                        <div class="benefit-card">
+                            <div class="benefit-icon">🆓</div>
+                            <h3>Gratis Selamanya</h3>
+                            <p>Tidak ada biaya apapun. Tidak ada iklan. Tidak perlu daftar akun. Langsung pakai!</p>
+                        </div>
+                        <div class="benefit-card">
+                            <div class="benefit-icon">📱</div>
+                            <h3>Bisa di HP & Laptop</h3>
+                            <p>Buka di browser HP atau laptop, tampilan otomatis menyesuaikan. Tidak perlu download aplikasi.</p>
+                        </div>
+                        <div class="benefit-card">
+                            <div class="benefit-icon">🔒</div>
+                            <h3>Data Aman di HP Kamu</h3>
+                            <p>Semua data tersimpan di browser kamu sendiri. Tidak ada yang bisa melihat data kamu.</p>
+                        </div>
+                        <div class="benefit-card">
+                            <div class="benefit-icon">👶</div>
+                            <h3>Mudah Dipahami</h3>
+                            <p>Dibuat khusus untuk pemula. Setiap fitur ada penjelasan langkah demi langkah.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="home-section">
+                    <h2 class="home-section-title">✨ Apa Saja yang Bisa Kamu Lakukan?</h2>
+                    <div class="feature-grid">
+                        <div class="feature-card" data-page="calculator">
+                            <div class="feature-img-wrap">
+                                <img src="https://mgx-backend-cdn.metadl.com/generate/images/1114886/2026-04-13/8981e3bf-ebd2-43e7-b67e-f18ae4e28f85.png" alt="Kalkulator">
+                            </div>
+                            <div class="feature-info">
+                                <h3>🧮 Kalkulator Bisnis</h3>
+                                <p><strong>Apa ini?</strong> Alat hitung otomatis untuk mengetahui berapa keuntungan kamu dari jualan.</p>
+                                <p><strong>Contoh:</strong> Kamu beli barang Rp 50.000, jual Rp 80.000. Tools ini langsung hitung untung kamu Rp 30.000 per barang, dan berapa barang yang harus terjual supaya balik modal.</p>
+                                <span class="feature-link">Coba Sekarang →</span>
+                            </div>
+                        </div>
+                        <div class="feature-card" data-page="finance">
+                            <div class="feature-img-wrap">
+                                <img src="https://mgx-backend-cdn.metadl.com/generate/images/1114886/2026-04-13/59030143-8045-4307-85ef-3394d51cce95.png" alt="Keuangan">
+                            </div>
+                            <div class="feature-info">
+                                <h3>💰 Catat Keuangan Harian</h3>
+                                <p><strong>Apa ini?</strong> Buku kas digital. Catat semua uang masuk dan uang keluar setiap hari.</p>
+                                <p><strong>Contoh:</strong> Hari ini dapat uang dari jualan Rp 500.000, bayar listrik Rp 100.000. Tinggal masukkan, otomatis terhitung saldo kamu.</p>
+                                <span class="feature-link">Coba Sekarang →</span>
+                            </div>
+                        </div>
+                        <div class="feature-card" data-page="invoice">
+                            <div class="feature-img-wrap">
+                                <img src="https://mgx-backend-cdn.metadl.com/generate/images/1114886/2026-04-13/a992ec8d-cb28-4977-8517-ad57ef1863da.png" alt="Invoice">
+                            </div>
+                            <div class="feature-info">
+                                <h3>🧾 Buat Nota / Invoice</h3>
+                                <p><strong>Apa ini?</strong> Pembuat nota penjualan otomatis yang bisa langsung dicetak (print).</p>
+                                <p><strong>Contoh:</strong> Pelanggan beli 3 barang, tinggal isi nama barang, jumlah, dan harga — nota rapi langsung jadi!</p>
+                                <span class="feature-link">Coba Sekarang →</span>
+                            </div>
+                        </div>
+                        <div class="feature-card" data-page="stock">
+                            <div class="feature-img-wrap">
+                                <img src="https://mgx-backend-cdn.metadl.com/generate/images/1114886/2026-04-13/32050261-9f4d-4e9a-869b-d72818a02d48.png" alt="Stok">
+                            </div>
+                            <div class="feature-info">
+                                <h3>📦 Kelola Stok Barang</h3>
+                                <p><strong>Apa ini?</strong> Pencatat stok barang supaya kamu tahu barang mana yang hampir habis.</p>
+                                <p><strong>Contoh:</strong> Kamu punya 100 keripik, terjual 80. Tools ini otomatis kasih peringatan kalau stok tinggal sedikit.</p>
+                                <span class="feature-link">Coba Sekarang →</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="home-cta-bottom">
+                    <h2>Siap Mulai Jualan dengan Lebih Rapi? 🚀</h2>
+                    <p>Tidak perlu bingung lagi. Klik tombol di bawah untuk langsung mulai!</p>
+                    <button class="btn btn-primary btn-lg" data-page="dashboard">Mulai Pakai Dashboard</button>
+                </div>
+            </section>
+
+            <!-- ==================== DASHBOARD PAGE ==================== -->
+            <section class="page" id="page-dashboard">
+                <div class="page-header">
+                    <div class="page-header-row">
+                        <div>
+                            <h1>📊 Dashboard Bisnis Kamu</h1>
+                            <p class="page-subtitle">Ini adalah ringkasan semua data bisnis kamu. Angka-angka ini otomatis terupdate setiap kamu mencatat transaksi atau stok barang.</p>
+                        </div>
+                        <button class="btn btn-secondary btn-sm" id="btnExportDashboard" title="Export ringkasan dashboard ke Excel">📥 Export Excel</button>
+                    </div>
+                </div>
+                <div class="tip-box">
+                    <span class="tip-icon">💡</span>
+                    <div>
+                        <strong>Tips untuk Pemula:</strong> Mulai dengan mencatat pemasukan dan pengeluaran harian kamu di menu <strong>"Catat Keuangan"</strong>. Setelah itu, angka-angka di dashboard ini akan otomatis terisi!
+                    </div>
+                </div>
+                <div class="summary-cards">
+                    <div class="summary-card card-income">
+                        <div class="card-icon-wrap icon-income">💵</div>
+                        <div class="card-info">
+                            <span class="card-label">Total Uang Masuk</span>
+                            <span class="card-sublabel">Semua pemasukan yang sudah kamu catat</span>
+                            <span class="card-value" id="dashIncome">Rp 0</span>
+                        </div>
+                    </div>
+                    <div class="summary-card card-expense">
+                        <div class="card-icon-wrap icon-expense">💸</div>
+                        <div class="card-info">
+                            <span class="card-label">Total Uang Keluar</span>
+                            <span class="card-sublabel">Semua pengeluaran yang sudah kamu catat</span>
+                            <span class="card-value" id="dashExpense">Rp 0</span>
+                        </div>
+                    </div>
+                    <div class="summary-card card-profit">
+                        <div class="card-icon-wrap icon-profit">📈</div>
+                        <div class="card-info">
+                            <span class="card-label">Keuntungan Bersih</span>
+                            <span class="card-sublabel">Uang Masuk dikurangi Uang Keluar</span>
+                            <span class="card-value" id="dashProfit">Rp 0</span>
+                        </div>
+                    </div>
+                    <div class="summary-card card-products">
+                        <div class="card-icon-wrap icon-products">📦</div>
+                        <div class="card-info">
+                            <span class="card-label">Jumlah Produk</span>
+                            <span class="card-sublabel">Total jenis barang yang kamu jual</span>
+                            <span class="card-value" id="dashProducts">0</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Chart Section -->
+                <div class="card chart-card">
+                    <div class="card-title-row">
+                        <h2 class="card-title" style="border-bottom:none;padding-bottom:0;margin-bottom:0;">📊 Grafik Keuangan 6 Bulan Terakhir</h2>
+                    </div>
+                    <p class="card-desc">Lihat tren pemasukan, pengeluaran, dan keuntungan bisnis kamu secara visual.</p>
+                    <div class="chart-container">
+                        <canvas id="dashboardChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="low-stock-section" id="lowStockSection" style="display:none;">
+                    <h2 class="section-title">⚠️ Peringatan: Stok Hampir Habis!</h2>
+                    <p class="section-desc">Barang-barang di bawah ini stoknya sudah menipis. Segera restok supaya pelanggan tidak kecewa!</p>
+                    <div class="low-stock-list" id="lowStockList"></div>
+                </div>
+                <div class="recent-section">
+                    <h2 class="section-title">📝 5 Transaksi Terakhir</h2>
+                    <p class="section-desc">Ini adalah catatan transaksi terbaru kamu. Untuk melihat semua, buka menu "Catat Keuangan".</p>
+                    <div class="recent-list" id="recentTransactions">
+                        <div class="empty-state-box">
+                            <span class="empty-icon">📝</span>
+                            <p>Belum ada transaksi yang dicatat.</p>
+                            <p class="empty-hint">Klik menu <strong>"Catat Keuangan"</strong> di samping kiri untuk mulai mencatat!</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==================== CALCULATOR PAGE ==================== -->
+            <section class="page" id="page-calculator">
+                <div class="page-header">
+                    <h1>🧮 Kalkulator Bisnis</h1>
+                    <p class="page-subtitle">Hitung keuntungan dan titik balik modal (BEP) dengan mudah</p>
+                </div>
+                <div class="tip-box">
+                    <span class="tip-icon">💡</span>
+                    <div>
+                        <strong>Apa itu Kalkulator Bisnis?</strong> Ini adalah alat hitung otomatis yang membantu kamu mengetahui:
+                        <br>• <strong>Berapa keuntungan</strong> yang kamu dapat dari setiap barang yang terjual
+                        <br>• <strong>Berapa barang</strong> yang harus terjual supaya kamu tidak rugi (ini namanya BEP / Break Even Point)
+                    </div>
+                </div>
+                <div class="calc-grid">
+                    <div class="card">
+                        <h2 class="card-title">💰 Hitung Keuntungan</h2>
+                        <p class="card-desc">Masukkan angka-angka di bawah ini untuk mengetahui berapa keuntungan kamu.</p>
+                        <div class="form-group">
+                            <label>Harga Modal per Barang (Rp)</label>
+                            <p class="input-hint">💬 Ini adalah harga beli barang dari supplier/toko grosir.</p>
+                            <input type="number" id="calcModal" placeholder="Contoh: 10000" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label>Biaya Tambahan per Barang (Rp)</label>
+                            <p class="input-hint">💬 Biaya lain seperti ongkir, plastik, label, dll. Kalau tidak ada, isi 0.</p>
+                            <input type="number" id="calcOperasional" placeholder="Contoh: 2000" min="0" value="0">
+                        </div>
+                        <div class="form-group">
+                            <label>Harga Jual per Barang (Rp)</label>
+                            <p class="input-hint">💬 Harga yang kamu pasang untuk pembeli.</p>
+                            <input type="number" id="calcHargaJual" placeholder="Contoh: 20000" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label>Jumlah Barang Terjual</label>
+                            <p class="input-hint">💬 Berapa banyak barang yang sudah terjual?</p>
+                            <input type="number" id="calcJumlah" placeholder="Contoh: 50" min="0">
+                        </div>
+                        <button class="btn btn-primary" id="btnCalcProfit">🔢 Hitung Keuntungan Saya</button>
+                        <div class="calc-result" id="profitResult" style="display:none;">
+                            <h3 class="result-title">📊 Hasil Perhitungan:</h3>
+                            <div class="result-row"><span>Total Modal:</span><span id="resModalTotal">Rp 0</span></div>
+                            <div class="result-row"><span>Total Biaya Tambahan:</span><span id="resOpsTotal">Rp 0</span></div>
+                            <div class="result-row"><span>Total Uang dari Penjualan:</span><span id="resRevenue">Rp 0</span></div>
+                            <div class="result-row highlight-green"><span>🎉 Keuntungan Bersih Kamu:</span><span id="resProfit">Rp 0</span></div>
+                            <div class="result-row highlight-accent"><span>📊 Margin Keuntungan:</span><span id="resMargin">0%</span></div>
+                            <p class="result-explain" id="profitExplain"></p>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h2 class="card-title">📐 Hitung Titik Balik Modal (BEP)</h2>
+                        <p class="card-desc">BEP = berapa banyak barang yang harus kamu jual supaya <strong>tidak rugi</strong>.</p>
+                        <div class="form-group">
+                            <label>Biaya Tetap per Bulan (Rp)</label>
+                            <p class="input-hint">💬 Biaya yang harus kamu bayar setiap bulan. Contoh: sewa + listrik.</p>
+                            <input type="number" id="bepFixedCost" placeholder="Contoh: 1300000" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label>Harga Jual per Barang (Rp)</label>
+                            <input type="number" id="bepPrice" placeholder="Contoh: 20000" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label>Modal + Biaya per Barang (Rp)</label>
+                            <p class="input-hint">💬 Harga beli + biaya tambahan per barang.</p>
+                            <input type="number" id="bepVarCost" placeholder="Contoh: 12000" min="0">
+                        </div>
+                        <button class="btn btn-primary" id="btnCalcBEP">🔢 Hitung BEP Saya</button>
+                        <div class="calc-result" id="bepResult" style="display:none;">
+                            <h3 class="result-title">📊 Hasil Perhitungan BEP:</h3>
+                            <div class="result-row"><span>Untung per Barang:</span><span id="resBepMargin">Rp 0</span></div>
+                            <div class="result-row highlight-accent"><span>📦 Minimal Barang Terjual:</span><span id="resBepUnit">0 barang</span></div>
+                            <div class="result-row highlight-green"><span>💰 Minimal Pendapatan:</span><span id="resBepRupiah">Rp 0</span></div>
+                            <p class="result-explain" id="resBepNote"></p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==================== FINANCE PAGE ==================== -->
+            <section class="page" id="page-finance">
+                <div class="page-header">
+                    <h1>💰 Catat Keuangan Harian</h1>
+                    <p class="page-subtitle">Catat semua uang masuk dan uang keluar setiap hari</p>
+                </div>
+                <div class="tip-box">
+                    <span class="tip-icon">💡</span>
+                    <div>
+                        <strong>Cara Pakai:</strong>
+                        <br>1️⃣ Isi form di bawah setiap ada uang masuk atau keluar
+                        <br>2️⃣ Klik "Simpan Transaksi"
+                        <br>3️⃣ Riwayat transaksi otomatis muncul di tabel bawah
+                    </div>
+                </div>
+                <div class="finance-filter">
+                    <div class="form-group-inline">
+                        <label>📅 Filter Bulan:</label>
+                        <input type="month" id="financeMonth">
+                    </div>
+                    <button class="btn btn-secondary btn-sm" id="btnFilterFinance">Filter</button>
+                    <button class="btn btn-outline btn-sm" id="btnShowAllFinance">Tampilkan Semua</button>
+                    <button class="btn btn-secondary btn-sm" id="btnExportFinance" title="Export ke Excel">📥 Export Excel</button>
+                </div>
+                <div class="finance-summary">
+                    <div class="fin-sum-card fin-income">
+                        <span class="fin-icon">💵</span>
+                        <span class="fin-label">Uang Masuk</span>
+                        <span class="fin-sublabel">Total pemasukan</span>
+                        <span class="fin-value" id="finTotalIncome">Rp 0</span>
+                    </div>
+                    <div class="fin-sum-card fin-expense">
+                        <span class="fin-icon">💸</span>
+                        <span class="fin-label">Uang Keluar</span>
+                        <span class="fin-sublabel">Total pengeluaran</span>
+                        <span class="fin-value" id="finTotalExpense">Rp 0</span>
+                    </div>
+                    <div class="fin-sum-card fin-balance">
+                        <span class="fin-icon">💎</span>
+                        <span class="fin-label">Sisa Uang</span>
+                        <span class="fin-sublabel">Masuk - Keluar</span>
+                        <span class="fin-value" id="finBalance">Rp 0</span>
+                    </div>
+                </div>
+                <div class="card">
+                    <h2 class="card-title">➕ Tambah Catatan Baru</h2>
+                    <p class="card-desc">Isi form di bawah ini setiap ada uang masuk atau keluar.</p>
+                    <form id="financeForm" class="finance-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>📅 Tanggal</label>
+                                <input type="date" id="finDate" required>
+                            </div>
+                            <div class="form-group">
+                                <label>📋 Jenis Transaksi</label>
+                                <select id="finType" required>
+                                    <option value="income">💵 Uang Masuk (Pemasukan)</option>
+                                    <option value="expense">💸 Uang Keluar (Pengeluaran)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>🏷️ Kategori</label>
+                                <select id="finCategory" required>
+                                    <option value="Penjualan">Penjualan Barang</option>
+                                    <option value="Jasa">Pendapatan Jasa</option>
+                                    <option value="Lainnya">Pemasukan Lainnya</option>
+                                    <option value="Bahan Baku">Beli Bahan/Barang</option>
+                                    <option value="Gaji">Gaji Karyawan</option>
+                                    <option value="Sewa">Sewa Tempat</option>
+                                    <option value="Listrik & Air">Listrik & Air</option>
+                                    <option value="Transportasi">Transportasi/Ongkir</option>
+                                    <option value="Operasional">Biaya Operasional Lain</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>💲 Jumlah Uang (Rp)</label>
+                                <input type="number" id="finAmount" placeholder="Contoh: 500000" min="1" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>📝 Keterangan (opsional)</label>
+                            <input type="text" id="finNote" placeholder="Contoh: Jual 10 bungkus keripik ke Bu Ani">
+                        </div>
+                        <button type="submit" class="btn btn-primary">✅ Simpan Transaksi</button>
+                    </form>
+                </div>
+                <div class="card">
+                    <h2 class="card-title">📋 Riwayat Transaksi</h2>
+                    <div class="table-wrapper">
+                        <table class="data-table" id="financeTable">
+                            <thead>
+                                <tr><th>Tanggal</th><th>Jenis</th><th>Kategori</th><th>Jumlah</th><th>Keterangan</th><th>Aksi</th></tr>
+                            </thead>
+                            <tbody id="financeTableBody"></tbody>
+                        </table>
+                    </div>
+                    <div class="empty-state-box" id="financeEmpty">
+                        <span class="empty-icon">📝</span>
+                        <p>Belum ada catatan transaksi.</p>
+                        <p class="empty-hint">Isi form di atas untuk mulai mencatat!</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==================== INVOICE PAGE ==================== -->
+            <section class="page" id="page-invoice">
+                <div class="page-header">
+                    <h1>🧾 Buat Nota / Invoice</h1>
+                    <p class="page-subtitle">Buat nota penjualan yang rapi dan profesional</p>
+                </div>
+                <div class="tip-box">
+                    <span class="tip-icon">💡</span>
+                    <div>
+                        <strong>Cara Pakai:</strong>
+                        <br>1️⃣ Isi data toko kamu
+                        <br>2️⃣ Isi nama pelanggan dan tanggal
+                        <br>3️⃣ Tambahkan barang yang dibeli
+                        <br>4️⃣ Klik "Buat Invoice" → preview muncul
+                        <br>5️⃣ Klik "Cetak" untuk print
+                    </div>
+                </div>
+                <div class="invoice-grid">
+                    <div class="card">
+                        <h2 class="card-title">📝 Isi Data Invoice</h2>
+                        <h3 class="form-section-title">🏪 Data Toko Kamu</h3>
+                        <div class="form-group">
+                            <label>Nama Toko / Usaha</label>
+                            <input type="text" id="invShopName" placeholder="Contoh: Toko Berkah Jaya">
+                        </div>
+                        <div class="form-group">
+                            <label>Alamat Toko</label>
+                            <input type="text" id="invShopAddress" placeholder="Contoh: Jl. Merdeka No. 10, Jakarta">
+                        </div>
+                        <div class="form-group">
+                            <label>No. Telepon / WhatsApp</label>
+                            <input type="text" id="invShopPhone" placeholder="Contoh: 08123456789">
+                        </div>
+                        <hr class="form-divider">
+                        <h3 class="form-section-title">👤 Data Pelanggan</h3>
+                        <div class="form-group">
+                            <label>Nama Pelanggan</label>
+                            <input type="text" id="invCustName" placeholder="Contoh: Bu Ani">
+                        </div>
+                        <div class="form-group">
+                            <label>Tanggal Pembelian</label>
+                            <input type="date" id="invDate">
+                        </div>
+                        <hr class="form-divider">
+                        <h3 class="form-section-title">🛒 Barang yang Dibeli</h3>
+                        <div id="invoiceItems">
+                            <div class="invoice-item-row">
+                                <input type="text" placeholder="Nama Barang" class="inv-item-name">
+                                <input type="number" placeholder="Qty" class="inv-item-qty" min="1">
+                                <input type="number" placeholder="Harga (Rp)" class="inv-item-price" min="0">
+                            </div>
+                        </div>
+                        <button class="btn btn-outline btn-sm" id="btnAddInvItem">+ Tambah Barang Lagi</button>
+                        <div style="margin-top:20px;">
+                            <button class="btn btn-primary" id="btnGenerateInvoice">🧾 Buat Invoice</button>
+                        </div>
+                    </div>
+                    <div class="card invoice-preview-card">
+                        <h2 class="card-title">👁️ Preview Nota</h2>
+                        <div class="invoice-preview" id="invoicePreview">
+                            <div class="empty-state-box">
+                                <span class="empty-icon">🧾</span>
+                                <p>Preview nota akan muncul di sini.</p>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary btn-lg" id="btnPrintInvoice" style="display:none;">🖨️ Cetak Nota Ini</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==================== STOCK PAGE ==================== -->
+            <section class="page" id="page-stock">
+                <div class="page-header">
+                    <h1>📦 Kelola Stok Barang</h1>
+                    <p class="page-subtitle">Catat semua barang dagangan kamu</p>
+                </div>
+                <div class="tip-box">
+                    <span class="tip-icon">💡</span>
+                    <div>
+                        <strong>Cara Pakai:</strong>
+                        <br>1️⃣ Tambah produk baru di form pertama
+                        <br>2️⃣ Setiap ada barang masuk/keluar, update di form kedua
+                        <br>3️⃣ Lihat daftar semua produk di tabel bawah
+                    </div>
+                </div>
+                <div class="card">
+                    <h2 class="card-title" id="stockFormTitle">➕ Tambah Produk Baru</h2>
+                    <form id="stockForm" class="stock-form">
+                        <input type="hidden" id="stockEditId" value="">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>📦 Nama Produk</label>
+                                <input type="text" id="stockName" placeholder="Contoh: Keripik Singkong Original" required>
+                            </div>
+                            <div class="form-group">
+                                <label>🏷️ Kategori</label>
+                                <input type="text" id="stockCategory" placeholder="Contoh: Makanan Ringan">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>💲 Harga Beli (Rp)</label>
+                                <input type="number" id="stockBuyPrice" placeholder="Contoh: 10000" min="0" required>
+                            </div>
+                            <div class="form-group">
+                                <label>💰 Harga Jual (Rp)</label>
+                                <input type="number" id="stockSellPrice" placeholder="Contoh: 20000" min="0" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>📊 Stok Awal</label>
+                                <input type="number" id="stockQty" placeholder="Contoh: 100" min="0" required>
+                            </div>
+                            <div class="form-group">
+                                <label>⚠️ Batas Minimum Stok</label>
+                                <input type="number" id="stockMinQty" placeholder="Contoh: 10" min="0" value="10">
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary" id="btnStockSubmit">✅ Tambah Produk</button>
+                            <button type="button" class="btn btn-outline" id="btnStockCancel" style="display:none;">❌ Batal Edit</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="card">
+                    <h2 class="card-title">🔄 Update Stok Masuk / Keluar</h2>
+                    <div class="form-row form-row-3">
+                        <div class="form-group">
+                            <label>📦 Pilih Produk</label>
+                            <select id="stockAdjProduct"><option value="">-- Pilih Produk --</option></select>
+                        </div>
+                        <div class="form-group">
+                            <label>📋 Jenis</label>
+                            <select id="stockAdjType">
+                                <option value="in">📥 Stok Masuk (Restok)</option>
+                                <option value="out">📤 Stok Keluar (Terjual)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>🔢 Jumlah</label>
+                            <input type="number" id="stockAdjQty" placeholder="Contoh: 50" min="1">
+                        </div>
+                    </div>
+                    <button class="btn btn-secondary" id="btnStockAdjust">🔄 Update Stok</button>
+                </div>
+                <div class="card">
+                    <div class="card-title-row">
+                        <h2 class="card-title" style="border-bottom:none;padding-bottom:0;margin-bottom:0;">📋 Daftar Semua Produk</h2>
+                        <button class="btn btn-secondary btn-sm" id="btnExportStock" title="Export ke Excel">📥 Export Excel</button>
+                    </div>
+                    <div class="table-wrapper">
+                        <table class="data-table" id="stockTable">
+                            <thead>
+                                <tr><th>Nama Produk</th><th>Kategori</th><th>Harga Beli</th><th>Harga Jual</th><th>Stok</th><th>Status</th><th>Aksi</th></tr>
+                            </thead>
+                            <tbody id="stockTableBody"></tbody>
+                        </table>
+                    </div>
+                    <div class="empty-state-box" id="stockEmpty">
+                        <span class="empty-icon">📦</span>
+                        <p>Belum ada produk yang didaftarkan.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==================== DOCS PAGE ==================== -->
+            <section class="page" id="page-docs">
+                <div class="page-header">
+                    <h1>📖 Panduan Lengkap untuk Pemula</h1>
+                    <p class="page-subtitle">Baca panduan ini supaya kamu bisa memaksimalkan semua fitur UMKM Mudah</p>
+                </div>
+                <div class="docs-hero">
+                    <img src="https://mgx-backend-cdn.metadl.com/generate/images/1114886/2026-04-13/7be2244b-fda8-4544-85df-dd803aa07fa6.png" alt="Panduan UMKM" class="docs-hero-img">
+                    <div class="docs-hero-overlay">
+                        <h2>Jangan Khawatir, Semua Ada Panduannya! 😊</h2>
+                        <p>Ikuti langkah-langkah di bawah ini, dijamin bisa!</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <h2 class="card-title">📑 Daftar Isi</h2>
+                    <div class="toc-list">
+                        <a href="#" class="toc-item" onclick="scrollToDoc('doc-mulai')">1. 🚀 Cara Mulai Menggunakan UMKM Mudah</a>
+                        <a href="#" class="toc-item" onclick="scrollToDoc('doc-dashboard')">2. 📊 Memahami Dashboard</a>
+                        <a href="#" class="toc-item" onclick="scrollToDoc('doc-kalkulator')">3. 🧮 Cara Pakai Kalkulator Bisnis</a>
+                        <a href="#" class="toc-item" onclick="scrollToDoc('doc-keuangan')">4. 💰 Cara Mencatat Keuangan</a>
+                        <a href="#" class="toc-item" onclick="scrollToDoc('doc-invoice')">5. 🧾 Cara Membuat Nota/Invoice</a>
+                        <a href="#" class="toc-item" onclick="scrollToDoc('doc-stok')">6. 📦 Cara Mengelola Stok Barang</a>
+                    </div>
+                </div>
+                <div class="card" id="doc-mulai">
+                    <h2 class="card-title">🚀 1. Cara Mulai Menggunakan UMKM Mudah</h2>
+                    <div class="doc-content">
+                        <p>Selamat datang! Berikut langkah-langkah untuk memulai:</p>
+                        <div class="doc-step"><div class="step-number">1</div><div class="step-content"><h4>Daftarkan Produk Kamu</h4><p>Buka menu <strong>"Stok Barang"</strong> → Isi nama produk, harga beli, harga jual, dan jumlah stok.</p></div></div>
+                        <div class="doc-step"><div class="step-number">2</div><div class="step-content"><h4>Mulai Catat Keuangan Harian</h4><p>Setiap ada uang masuk atau keluar, catat di menu <strong>"Catat Keuangan"</strong>.</p></div></div>
+                        <div class="doc-step"><div class="step-number">3</div><div class="step-content"><h4>Cek Dashboard Setiap Hari</h4><p>Buka <strong>"Dashboard"</strong> untuk melihat ringkasan bisnis kamu.</p></div></div>
+                        <div class="doc-step"><div class="step-number">4</div><div class="step-content"><h4>Buat Nota untuk Pelanggan</h4><p>Kalau ada pelanggan yang beli banyak, buatkan nota di menu <strong>"Buat Nota"</strong>.</p></div></div>
+                    </div>
+                </div>
+                <div class="card" id="doc-dashboard">
+                    <h2 class="card-title">📊 2. Memahami Dashboard</h2>
+                    <div class="doc-content">
+                        <p>Dashboard menampilkan <strong>ringkasan bisnis kamu</strong>: total pemasukan, pengeluaran, keuntungan, jumlah produk, peringatan stok, dan transaksi terakhir.</p>
+                    </div>
+                </div>
+                <div class="card" id="doc-kalkulator">
+                    <h2 class="card-title">🧮 3. Cara Pakai Kalkulator Bisnis</h2>
+                    <div class="doc-content">
+                        <p>Gunakan kalkulator untuk menghitung keuntungan per barang dan BEP (Break Even Point).</p>
+                    </div>
+                </div>
+                <div class="card" id="doc-keuangan">
+                    <h2 class="card-title">💰 4. Cara Mencatat Keuangan</h2>
+                    <div class="doc-content">
+                        <p>Catat setiap uang masuk dan keluar. Biasakan catat setiap hari, jangan ditunda!</p>
+                    </div>
+                </div>
+                <div class="card" id="doc-invoice">
+                    <h2 class="card-title">🧾 5. Cara Membuat Nota/Invoice</h2>
+                    <div class="doc-content">
+                        <p>Isi data toko, data pelanggan, dan barang yang dibeli. Klik "Buat Invoice" lalu "Cetak".</p>
+                    </div>
+                </div>
+                <div class="card" id="doc-stok">
+                    <h2 class="card-title">📦 6. Cara Mengelola Stok Barang</h2>
+                    <div class="doc-content">
+                        <p>Daftarkan produk, update stok masuk/keluar, dan pantau peringatan stok menipis.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==================== SUPPORT PAGE ==================== -->
+            <section class="page" id="page-support">
+                <div class="page-header">
+                    <h1>💬 Bantuan & Pertanyaan</h1>
+                    <p class="page-subtitle">Ada pertanyaan atau masalah? Hubungi developer langsung!</p>
+                </div>
+                <div class="support-contact-grid">
+                    <a href="https://discord.gg/9nsub2yx4V" target="_blank" rel="noopener noreferrer" class="support-contact-card discord-card">
+                        <div class="support-contact-icon">🎮</div>
+                        <h3>Discord Community</h3>
+                        <p>Gabung server Discord untuk diskusi dan update terbaru!</p>
+                        <span class="support-contact-link">Gabung Discord →</span>
+                    </a>
+                    <a href="https://www.instagram.com/_sobing_/" target="_blank" rel="noopener noreferrer" class="support-contact-card instagram-card">
+                        <div class="support-contact-icon">📸</div>
+                        <h3>Instagram</h3>
+                        <p>Follow dan DM untuk pertanyaan atau saran.</p>
+                        <span class="support-contact-link">Buka Instagram →</span>
+                    </a>
+                    <a href="https://github.com/SOBING4413?tab=repositories" target="_blank" rel="noopener noreferrer" class="support-contact-card github-card">
+                        <div class="support-contact-icon">🐙</div>
+                        <h3>GitHub</h3>
+                        <p>Lihat project lainnya atau laporkan bug.</p>
+                        <span class="support-contact-link">Buka GitHub →</span>
+                    </a>
+                </div>
+                <div class="card">
+                    <h2 class="card-title">📝 Kirim Pertanyaan / Saran</h2>
+                    <form id="supportForm" class="support-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>👤 Nama Kamu</label>
+                                <input type="text" id="supportName" placeholder="Contoh: Budi Santoso" required>
+                            </div>
+                            <div class="form-group">
+                                <label>📧 Email (opsional)</label>
+                                <input type="email" id="supportEmail" placeholder="Contoh: budi@email.com">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>📋 Kategori Pertanyaan</label>
+                            <select id="supportCategory" required>
+                                <option value="Pertanyaan Umum">❓ Pertanyaan Umum</option>
+                                <option value="Laporan Bug">🐛 Laporan Bug / Error</option>
+                                <option value="Saran Fitur">💡 Saran Fitur Baru</option>
+                                <option value="Cara Pakai">📖 Cara Menggunakan Fitur</option>
+                                <option value="Lainnya">📌 Lainnya</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>💬 Pesan / Pertanyaan</label>
+                            <textarea id="supportMessage" rows="5" placeholder="Tulis pesan kamu di sini..." required style="width:100%;padding:12px 16px;border:2px solid var(--border);border-radius:var(--radius-sm);font-size:15px;font-family:inherit;color:var(--text);background:var(--card);resize:vertical;"></textarea>
+                        </div>
+                        <div class="support-send-buttons">
+                            <button type="button" class="btn btn-primary" id="btnSendDiscord">🎮 Kirim ke Discord</button>
+                            <button type="button" class="btn btn-secondary" id="btnCopyMessage">📋 Salin Pesan</button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- ==================== CREDITS PAGE ==================== -->
+            <section class="page" id="page-credits">
+                <div class="page-header">
+                    <h1>👨‍💻 Credits</h1>
+                    <p class="page-subtitle">Informasi tentang pembuat website UMKM Mudah</p>
+                </div>
+                <div class="credits-profile-card">
+                    <div class="credits-avatar">
+                        <div class="credits-avatar-circle">🧑‍💻</div>
+                    </div>
+                    <div class="credits-info">
+                        <h2 class="credits-name">Sobing4413</h2>
+                        <p class="credits-role">Creator & Developer — UMKM Mudah</p>
+                        <p class="credits-bio">Membuat tools gratis untuk membantu para pelaku UMKM pemula di Indonesia.</p>
+                        <div class="credits-social-links">
+                            <a href="https://github.com/SOBING4413?tab=repositories" target="_blank" rel="noopener noreferrer" class="credits-social-btn github"><span>🐙</span> GitHub</a>
+                            <a href="https://www.instagram.com/_sobing_/" target="_blank" rel="noopener noreferrer" class="credits-social-btn instagram"><span>📸</span> Instagram</a>
+                            <a href="https://discord.gg/9nsub2yx4V" target="_blank" rel="noopener noreferrer" class="credits-social-btn discord"><span>🎮</span> Discord</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <h2 class="card-title">🛠️ Teknologi yang Digunakan</h2>
+                    <div class="tech-stack-grid">
+                        <div class="tech-item"><div class="tech-icon">🌐</div><h4>HTML5</h4><p>Struktur halaman web</p></div>
+                        <div class="tech-item"><div class="tech-icon">🎨</div><h4>CSS3</h4><p>Desain & tampilan responsif</p></div>
+                        <div class="tech-item"><div class="tech-icon">⚡</div><h4>JavaScript</h4><p>Logika & interaktivitas</p></div>
+                        <div class="tech-item"><div class="tech-icon">🔥</div><h4>Firebase</h4><p>Autentikasi & database</p></div>
+                        <div class="tech-item"><div class="tech-icon">📊</div><h4>SheetJS</h4><p>Export data ke Excel</p></div>
+                    </div>
+                </div>
+                <div class="credits-version-card">
+                    <div class="version-info">
+                        <span class="version-badge">v2.1.0</span>
+                        <span>UMKM Mudah — Tools Gratis untuk Pemula Jualan</span>
+                    </div>
+                    <p>© 2026 Sobing4413.</p>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Print Area (hidden) -->
+    <div id="printArea" class="print-area"></div>
+
+    <script type="module" src="./firebase.js"></script>
+    <script src="./script.js"></script>
+    <script src="./calculator.js"></script>
+    <script src="./finance.js"></script>
+    <script src="./invoice.js"></script>
+    <script src="./stock.js"></script>
+    <script src="./confirm-logout.js"></script>
+    <script src="./chart-dashboard.js"></script>
+    <script src="./search-feature.js"></script>
+    <!-- PWA Service Worker & Install Prompt -->
+    <script>
+        // Register Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('./sw.js').then(function(reg) {
+                    console.log('✅ Service Worker registered:', reg.scope);
+                }).catch(function(err) {
+                    console.log('⚠️ Service Worker registration failed:', err);
+                });
+            });
+        }
+
+        // PWA Install Prompt
+        var deferredPrompt = null;
+        window.addEventListener('beforeinstallprompt', function(e) {
+            e.preventDefault();
+            deferredPrompt = e;
+
+            // Check if user dismissed before
+            if (localStorage.getItem('umkm_pwa_dismissed') === 'true') return;
+
+            // Show install banner after 3 seconds
+            setTimeout(function() {
+                showPWABanner();
+            }, 3000);
+        });
+
+        function showPWABanner() {
+            if (!deferredPrompt) return;
+
+            // Remove existing banner
+            var existing = document.getElementById('pwaBanner');
+            if (existing) existing.remove();
+
+            var banner = document.createElement('div');
+            banner.id = 'pwaBanner';
+            banner.className = 'pwa-install-banner';
+            banner.innerHTML =
+                '<span class="pwa-install-icon">📲</span>' +
+                '<div class="pwa-install-text">' +
+                    '<h4>Install UMKM Mudah</h4>' +
+                    '<p>Pasang di HP kamu untuk akses lebih cepat!</p>' +
+                '</div>' +
+                '<div class="pwa-install-actions">' +
+                    '<button class="pwa-install-btn primary" id="btnPWAInstall">Install</button>' +
+                    '<button class="pwa-install-btn dismiss" id="btnPWADismiss">Nanti</button>' +
+                '</div>';
+            document.body.appendChild(banner);
+
+            document.getElementById('btnPWAInstall').addEventListener('click', function() {
+                if (deferredPrompt) {
+                    deferredPrompt.prompt();
+                    deferredPrompt.userChoice.then(function(result) {
+                        console.log('PWA install:', result.outcome);
+                        deferredPrompt = null;
+                        banner.remove();
+                    });
+                }
+            });
+
+            document.getElementById('btnPWADismiss').addEventListener('click', function() {
+                banner.remove();
+                localStorage.setItem('umkm_pwa_dismissed', 'true');
+            });
+        }
+    </script>
+</body>
+</html>

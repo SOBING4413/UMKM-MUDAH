@@ -1,0 +1,263 @@
+/* ===== FEATURES CSS =====
+   Styles for: Confirm Logout, Chart, Search, PWA Install
+   ================================================================ */
+
+/* ===== LOGOUT CONFIRMATION MODAL ===== */
+.logout-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    z-index: 20000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.logout-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.logout-modal {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 36px 32px;
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    transform: scale(0.9) translateY(20px);
+    transition: transform 0.3s ease;
+    border: 1px solid var(--border-light);
+}
+
+.logout-overlay.active .logout-modal {
+    transform: scale(1) translateY(0);
+}
+
+.logout-modal-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+    display: block;
+}
+
+.logout-modal-title {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--text);
+    margin-bottom: 8px;
+}
+
+.logout-modal-desc {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin-bottom: 28px;
+}
+
+.logout-modal-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+}
+
+.btn-logout-cancel {
+    flex: 1;
+    max-width: 160px;
+}
+
+.btn-logout-confirm {
+    flex: 1;
+    max-width: 160px;
+}
+
+/* ===== CHART SECTION ===== */
+.chart-card {
+    margin-bottom: 24px;
+}
+
+.chart-container {
+    position: relative;
+    height: 320px;
+    width: 100%;
+    margin-top: 8px;
+}
+
+@media (max-width: 768px) {
+    .chart-container {
+        height: 250px;
+    }
+}
+
+@media (max-width: 480px) {
+    .chart-container {
+        height: 220px;
+    }
+}
+
+/* ===== SEARCH BAR ===== */
+.search-bar-wrap {
+    margin-bottom: 16px;
+}
+
+.search-input-group {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.search-icon {
+    position: absolute;
+    left: 16px;
+    font-size: 18px;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.search-input {
+    width: 100%;
+    padding: 14px 48px 14px 48px;
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    font-size: 15px;
+    font-family: inherit;
+    color: var(--text);
+    background: var(--card);
+    transition: var(--transition);
+    box-shadow: var(--shadow);
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.12);
+}
+
+[data-theme="dark"] .search-input:focus {
+    box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.2);
+}
+
+.search-input::placeholder {
+    color: #94A3B8;
+}
+
+[data-theme="dark"] .search-input::placeholder {
+    color: #4B6B4B;
+}
+
+.search-clear-btn {
+    position: absolute;
+    right: 12px;
+    background: var(--border);
+    border: none;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+    transition: var(--transition);
+}
+
+.search-clear-btn:hover {
+    background: var(--danger);
+    color: #FFFFFF;
+}
+
+/* ===== PWA INSTALL PROMPT (optional enhancement) ===== */
+.pwa-install-banner {
+    position: fixed;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--card);
+    border: 2px solid var(--primary);
+    border-radius: var(--radius);
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: var(--shadow-lg);
+    z-index: 9999;
+    max-width: 420px;
+    width: 90%;
+    animation: slideUp 0.4s ease;
+}
+
+.pwa-install-banner.hidden {
+    display: none;
+}
+
+@keyframes slideUp {
+    from { transform: translateX(-50%) translateY(100px); opacity: 0; }
+    to { transform: translateX(-50%) translateY(0); opacity: 1; }
+}
+
+.pwa-install-icon {
+    font-size: 32px;
+    flex-shrink: 0;
+}
+
+.pwa-install-text h4 {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 2px;
+}
+
+.pwa-install-text p {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.pwa-install-actions {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.pwa-install-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.pwa-install-btn.primary {
+    background: var(--primary);
+    color: #FFFFFF;
+}
+
+.pwa-install-btn.primary:hover {
+    background: var(--primary-dark);
+}
+
+.pwa-install-btn.dismiss {
+    background: transparent;
+    color: var(--text-secondary);
+}
+
+.pwa-install-btn.dismiss:hover {
+    color: var(--text);
+}
+
+@media (max-width: 768px) {
+    .pwa-install-banner {
+        bottom: 90px;
+        flex-wrap: wrap;
+    }
+}

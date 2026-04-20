@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Masuk - UMKM Mudah</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+
+    <!-- ==================== LOADING SCREEN ==================== -->
+    <div id="loadingScreen" class="loading-screen">
+        <div class="loading-content">
+            <div class="loading-logo-wrap">
+                <div class="loading-logo-circle">
+                    <span class="loading-logo-icon">🌿</span>
+                </div>
+                <div class="loading-pulse-ring"></div>
+                <div class="loading-pulse-ring ring-2"></div>
+            </div>
+            <h1 class="loading-title">UMKM Mudah</h1>
+            <p class="loading-tagline">Tools Gratis untuk Pemula Jualan</p>
+            <div class="loading-bar-wrap">
+                <div class="loading-bar" id="loadingBar"></div>
+            </div>
+            <p class="loading-status" id="loadingStatus">Memuat aplikasi...</p>
+        </div>
+    </div>
+
+    <!-- ==================== AUTH PAGE ==================== -->
+    <div id="authPage" class="auth-page" style="display:none;">
+        <div class="auth-bg">
+            <img src="https://mgx-backend-cdn.metadl.com/generate/images/1126776/2026-04-16/myowaryaafba/auth-bg-pattern.png" alt="" class="auth-bg-img">
+            <div class="auth-bg-overlay"></div>
+        </div>
+
+        <div class="auth-container">
+            <!-- Left Side - Branding -->
+            <div class="auth-branding">
+                <div class="auth-brand-content">
+                    <div class="auth-brand-logo">
+                        <span class="auth-brand-icon">🌿</span>
+                        <span class="auth-brand-text">UMKM Mudah</span>
+                    </div>
+                    <h2 class="auth-brand-title">Kelola Bisnis Kamu<br>dengan Lebih Mudah!</h2>
+                    <p class="auth-brand-desc">Platform gratis untuk membantu UMKM pemula mengelola keuangan, stok barang, dan nota penjualan dengan mudah.</p>
+                    <div class="auth-brand-features">
+                        <div class="auth-feature-item">
+                            <span class="auth-feature-icon">🆓</span>
+                            <span>100% Gratis Selamanya</span>
+                        </div>
+                        <div class="auth-feature-item">
+                            <span class="auth-feature-icon">📱</span>
+                            <span>Bisa di HP & Laptop</span>
+                        </div>
+                        <div class="auth-feature-item">
+                            <span class="auth-feature-icon">🔒</span>
+                            <span>Data Aman & Tersinkron</span>
+                        </div>
+                        <div class="auth-feature-item">
+                            <span class="auth-feature-icon">👶</span>
+                            <span>Mudah Dipahami Pemula</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side - Auth Forms -->
+            <div class="auth-form-section">
+                <div class="auth-card">
+                    <!-- Auth Tabs -->
+                    <div class="auth-tabs">
+                        <button class="auth-tab active" data-auth-tab="login">Masuk</button>
+                        <button class="auth-tab" data-auth-tab="signup">Daftar</button>
+                    </div>
+
+                    <!-- Login Form -->
+                    <div class="auth-form-wrap active" id="authFormLogin">
+                        <h3 class="auth-form-title">Selamat Datang Kembali! 👋</h3>
+                        <p class="auth-form-desc">Masuk ke akun kamu untuk melanjutkan</p>
+
+                        <form id="loginForm" class="auth-form" autocomplete="on">
+                            <div class="auth-input-group">
+                                <label for="loginEmail">📧 Email</label>
+                                <input type="email" id="loginEmail" placeholder="contoh@email.com" required autocomplete="email">
+                            </div>
+                            <div class="auth-input-group">
+                                <label for="loginPassword">🔑 Password</label>
+                                <div class="auth-password-wrap">
+                                    <input type="password" id="loginPassword" placeholder="Masukkan password" required autocomplete="current-password">
+                                    <button type="button" class="auth-toggle-pass" onclick="togglePassword('loginPassword', this)">👁️</button>
+                                </div>
+                            </div>
+                            <div class="auth-options">
+                                <label class="auth-remember">
+                                    <input type="checkbox" id="rememberMe"> Ingat saya
+                                </label>
+                                <button type="button" class="auth-link-btn" onclick="showResetPassword()">Lupa password?</button>
+                            </div>
+                            <button type="submit" class="auth-submit-btn" id="btnLoginEmail">
+                                <span class="auth-btn-text">🔐 Masuk</span>
+                                <span class="auth-btn-loading" style="display:none;">⏳ Memproses...</span>
+                            </button>
+                        </form>
+
+                        <div class="auth-divider">
+                            <span>atau</span>
+                        </div>
+
+                        <button class="auth-google-btn" id="btnLoginGoogleAuth">
+                            <svg width="20" height="20" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/><path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/><path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/><path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/></svg>
+                            <span>Masuk dengan Google</span>
+                        </button>
+
+                        <p class="auth-switch-text">
+                            Belum punya akun? <button type="button" class="auth-link-btn" onclick="switchAuthTab('signup')">Daftar sekarang</button>
+                        </p>
+                    </div>
+
+                    <!-- Signup Form -->
+                    <div class="auth-form-wrap" id="authFormSignup">
+                        <h3 class="auth-form-title">Buat Akun Baru 🚀</h3>
+                        <p class="auth-form-desc">Daftar gratis untuk mulai mengelola bisnis kamu</p>
+
+                        <form id="signupForm" class="auth-form" autocomplete="on">
+                            <div class="auth-input-group">
+                                <label for="signupName">👤 Nama Lengkap</label>
+                                <input type="text" id="signupName" placeholder="Contoh: Budi Santoso" required autocomplete="name">
+                            </div>
+                            <div class="auth-input-group">
+                                <label for="signupEmail">📧 Email</label>
+                                <input type="email" id="signupEmail" placeholder="contoh@email.com" required autocomplete="email">
+                            </div>
+                            <div class="auth-input-group">
+                                <label for="signupPassword">🔑 Password</label>
+                                <div class="auth-password-wrap">
+                                    <input type="password" id="signupPassword" placeholder="Minimal 6 karakter" required minlength="6" autocomplete="new-password">
+                                    <button type="button" class="auth-toggle-pass" onclick="togglePassword('signupPassword', this)">👁️</button>
+                                </div>
+                            </div>
+                            <div class="auth-input-group">
+                                <label for="signupConfirmPassword">🔑 Konfirmasi Password</label>
+                                <div class="auth-password-wrap">
+                                    <input type="password" id="signupConfirmPassword" placeholder="Ulangi password" required minlength="6" autocomplete="new-password">
+                                    <button type="button" class="auth-toggle-pass" onclick="togglePassword('signupConfirmPassword', this)">👁️</button>
+                                </div>
+                            </div>
+                            <button type="submit" class="auth-submit-btn" id="btnSignupEmail">
+                                <span class="auth-btn-text">🚀 Daftar Sekarang</span>
+                                <span class="auth-btn-loading" style="display:none;">⏳ Memproses...</span>
+                            </button>
+                        </form>
+
+                        <div class="auth-divider">
+                            <span>atau</span>
+                        </div>
+
+                        <button class="auth-google-btn" id="btnSignupGoogleAuth">
+                            <svg width="20" height="20" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/><path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/><path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/><path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/></svg>
+                            <span>Daftar dengan Google</span>
+                        </button>
+
+                        <p class="auth-switch-text">
+                            Sudah punya akun? <button type="button" class="auth-link-btn" onclick="switchAuthTab('login')">Masuk di sini</button>
+                        </p>
+                    </div>
+
+                    <!-- Reset Password Form -->
+                    <div class="auth-form-wrap" id="authFormReset">
+                        <button type="button" class="auth-back-btn" onclick="switchAuthTab('login')">← Kembali ke Login</button>
+                        <h3 class="auth-form-title">Lupa Password? 🔓</h3>
+                        <p class="auth-form-desc">Masukkan email kamu dan kami akan mengirimkan link untuk reset password.</p>
+
+                        <form id="resetForm" class="auth-form">
+                            <div class="auth-input-group">
+                                <label for="resetEmail">📧 Email</label>
+                                <input type="email" id="resetEmail" placeholder="contoh@email.com" required>
+                            </div>
+                            <button type="submit" class="auth-submit-btn" id="btnResetPassword">
+                                <span class="auth-btn-text">📩 Kirim Link Reset</span>
+                                <span class="auth-btn-loading" style="display:none;">⏳ Mengirim...</span>
+                            </button>
+                        </form>
+
+                        <div class="auth-reset-info">
+                            <div class="auth-info-icon">💡</div>
+                            <div>
+                                <strong>Tips:</strong> Cek folder Spam/Junk jika email tidak masuk ke inbox. Link reset password berlaku selama 1 jam.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Skip Login Option -->
+                    <div class="auth-skip-wrap">
+                        <button type="button" class="auth-skip-btn" id="btnSkipLogin">
+                            Lewati, gunakan tanpa akun →
+                        </button>
+                        <p class="auth-skip-note">Data hanya tersimpan di perangkat ini</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script type="module" src="./firebase-login.js"></script>
+    <script src="./auth.js"></script>
+</body>
+</html>

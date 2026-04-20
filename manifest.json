@@ -1,0 +1,27 @@
+{
+    "name": "UMKM Mudah",
+    "short_name": "UMKM Mudah",
+    "description": "Tools Gratis untuk Pemula Jualan - Kelola keuangan, stok, dan nota penjualan dengan mudah",
+    "start_url": "./index.html",
+    "display": "standalone",
+    "background_color": "#0A1A0A",
+    "theme_color": "#16A34A",
+    "orientation": "portrait-primary",
+    "icons": [
+        {
+            "src": "./icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "./icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ],
+    "categories": ["business", "finance", "productivity"],
+    "lang": "id",
+    "dir": "ltr"
+}
